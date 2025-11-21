@@ -1,0 +1,13 @@
+services:
+  candidate-gen-service:
+    build: ./services/candidate-gen-service/
+    ports: 
+      - 8080:80
+  gbdt-model-service:
+    build: ./services/gbdt-model-service/
+    ports:
+      - 8070:70
+  ltr-model-service:
+    build: ./services/ltr-model-service/
+    ports:
+      - 8060:60
