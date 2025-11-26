@@ -2,12 +2,24 @@ services:
   candidate-gen-service:
     build: ./services/candidate-gen-service/
     ports: 
-      - 8080:80
+      - 3000:80
   gbdt-model-service:
     build: ./services/gbdt-model-service/
     ports:
-      - 8070:70
+      - 3001:80
   ltr-model-service:
     build: ./services/ltr-model-service/
     ports:
-      - 8060:60
+      - 3002:80
+  spring-orchestrator-service:
+    build: ./services/orchestrator-service
+    ports:
+      - 8080:8080
+  spring-ranking-service:
+    build: ./services/ranking-service
+    ports:
+      - 8070:8080
+  spring-fine-ranking-service:
+    build: ./services/fine-ranking-service
+    ports:
+      - 8060:8080
