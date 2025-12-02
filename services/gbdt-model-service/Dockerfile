@@ -4,7 +4,7 @@ WORKDIR /code
 
 COPY ./requirements.txt /code/requirements.txt
 
-RUN pip install --no-cache --upgrade -r requirements.txt
+RUN pip install --no-cache --upgrade -r /code/requirements.txt
 
 COPY ./src /code/src
 

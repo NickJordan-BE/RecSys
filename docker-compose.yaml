@@ -11,6 +11,10 @@ services:
     build: ./services/ltr-model-service/
     ports:
       - ${LTR_SERVICE_PORT}:80
+  embeddings-service:
+    build: ./services/embeddings-service
+    ports:
+      - ${EMBEDDINGS_SERVICE_PORT}:80
   spring-orchestrator-service:
     build: ./services/orchestrator-service
     ports:
