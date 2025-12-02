@@ -27,3 +27,7 @@ services:
     build: ./services/fine-ranking-service
     ports:
       - ${FINE_RANKING_SERVICE_PORT}:8080
+  feature-store-service:
+    build: ./services/feature-store-service
+    ports:
+      - ${FEATURE_STORE_SERVICE_PORT}:4000
