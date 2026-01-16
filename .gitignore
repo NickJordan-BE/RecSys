@@ -3,3 +3,7 @@
 *terraform.tfstate.backup
 infra/terraform/.terraform
 infra/terraform/.terraform.lock.hcl
+*.vscode
+*.DS_Store
+*kubeconfig.yaml
+*.tfvars

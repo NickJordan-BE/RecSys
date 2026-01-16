@@ -19,7 +19,7 @@ terraform {
 provider "kind" {}
 
 resource "local_file" "kubeconfig" {
-  content  = kind_cluster.recsys-kind-cluster.kubeconfig
+  content  = kind_cluster.recsys-cluster-1.kubeconfig
   filename = "${path.module}/kubeconfig.yaml"
 }
 

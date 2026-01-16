@@ -1,5 +1,5 @@
-resource "kind_cluster" "recsys-kind-cluster" {
-    name            = "recsys-kind-cluster"
+resource "kind_cluster" "recsys-cluster-1" {
+    name            = "recsys-cluster-1"
     node_image      = "kindest/node:v1.27.1"
     kubeconfig_path = pathexpand("/tmp/config")
     wait_for_ready  = true
