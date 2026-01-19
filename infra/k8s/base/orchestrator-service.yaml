@@ -24,7 +24,7 @@ spec:
         - name: dockerhub-auth
       containers:
       - name: orchestrator-app
-        image: nikjor/recsys:spring-orchestrator-servicev1.0
+        image: ${DOCKER_USERNAME}/recsys:spring-orchestrator-servicev1.0
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
