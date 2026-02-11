@@ -1,5 +1,5 @@
-resource "kind_cluster" "recsys-cluster-1" {
-    name            = "recsys-cluster-1"
+resource "kind_cluster" "recsys-cluster-3" {
+    name            = "recsys-cluster-3"
     node_image      = "kindest/node:v1.27.1"
     kubeconfig_path = pathexpand("/tmp/config")
     wait_for_ready  = true
@@ -42,57 +42,17 @@ resource "kubernetes_secret" "dockerhub-auth" {
     }
 }
 
-resource "kubernetes_deployment" "orchestrator_app" {
-  metadata {
-    name      = "orchestrator-app"
-    namespace = "orchestrator-app"
-    labels = {
-      app = "orchestrator-app"
+resource "helm_release" "orchestrator-app" {
+    name  = "orchestrator-app"
+    chart = "${path.module}/../helm/charts/orchestrator-app"
+    namespace = kubernetes_namespace.orchestrator-app.metadata[0].name
+
+    values = [
+      file("${path.module}/../helm/charts/orchestrator-app/values.yaml")
+    ]
+
+    set {
+      name = "image.repository"
+      value = "${var.docker_username}/recsys"
     }
-  }
-
-  spec {
-    replicas = 2
-
-    selector {
-      match_labels = {
-        app = "orchestrator-app"
-      }
-    }
-
-    template {
-      metadata {
-        labels = {
-          app = "orchestrator-app"
-        }
-      }
-
-      spec {
-        image_pull_secrets {
-          name = "dockerhub-auth"
-        }
-
-        container {
-          name  = "orchestrator-app"
-          image = "${var.docker_username}/recsys:spring-orchestrator-servicev1.0"
-          image_pull_policy = "Always"
-
-          port {
-            container_port = 8080
-          }
-
-          resources {
-            requests = {
-              cpu    = "250m"
-              memory = "256Mi"
-            }
-            limits = {
-              cpu    = "500m"
-              memory = "512Mi"
-            }
-          }
-        }
-      }
-    }
-  }
 }
