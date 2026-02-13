@@ -1,7 +1,0 @@
-fastapi[standard]
-numpy
-pandas
-faiss-cpu
-grpcio
-grpcio-tools
-protobuf

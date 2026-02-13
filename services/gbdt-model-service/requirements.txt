@@ -1,4 +1,0 @@
-fastapi[standard]
-grpcio
-grpcio-tools
-protobuf
