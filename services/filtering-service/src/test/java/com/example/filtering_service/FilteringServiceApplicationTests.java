@@ -1,10 +1,10 @@
-package com.example.recsys_fine_ranking_service;
+package com.example.filtering_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RecsysFineRankingServiceApplicationTests {
+class FilteringServiceApplicationTests {
 
 	@Test
 	void contextLoads() {

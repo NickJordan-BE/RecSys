@@ -4,21 +4,6 @@ services:
     image: ${DOCKER_USERNAME}/recsys:candidate-gen-servicev1.0
     ports: 
       - ${CANDIDATE_GEN_SERVICE_PORT}:80
-  gbdt-model-service:
-    build: ./services/gbdt-model-service/
-    image: ${DOCKER_USERNAME}/recsys:gbdt-model-servicev1.0
-    ports:
-      - ${GBDT_SERVICE_PORT}:80
-  ltr-model-service:
-    build: ./services/ltr-model-service/
-    image: ${DOCKER_USERNAME}/recsys:ltr-model-servicev1.0
-    ports:
-      - ${LTR_SERVICE_PORT}:80
-  embeddings-service:
-    build: ./services/embeddings-service
-    image: ${DOCKER_USERNAME}/recsys:embeddings-servicev1.0
-    ports:
-      - ${EMBEDDINGS_SERVICE_PORT}:80
   spring-orchestrator-service:
     build: ./services/orchestrator-service
     image: ${DOCKER_USERNAME}/recsys:spring-orchestrator-servicev1.0
@@ -29,9 +14,9 @@ services:
     image: ${DOCKER_USERNAME}/recsys:spring-ranking-servicev1.0
     ports:
       - ${RANKING_SERVICE_PORT}:8080
-  spring-fine-ranking-service:
-    build: ./services/fine-ranking-service
-    image: ${DOCKER_USERNAME}/recsys:spring-fine-ranking-servicev1.0
+  spring-filtering-service:
+    build: ./services/filtering-service
+    image: ${DOCKER_USERNAME}/recsys:spring-filtering-servicev1.0
     ports:
       - ${FINE_RANKING_SERVICE_PORT}:8080
   feature-store-service:
