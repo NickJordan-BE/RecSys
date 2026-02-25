@@ -1,6 +1,6 @@
 image:
-  repository: recsys
-  tag: spring-orchestrator-servicev1.0
+  repository: orchestrator-app
+  tag: v1.0.0
 deployment:
   containerPort: 8080
   resources:

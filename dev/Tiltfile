@@ -1,0 +1,4 @@
+
+docker_build('orchestrator-app:v1.0.0', '../services/orchestrator')
+
+k8s_yaml(helm('../infra/helm/charts/orchestrator-app'))
