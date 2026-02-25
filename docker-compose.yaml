@@ -18,7 +18,7 @@ services:
     build: ./services/filtering-service
     image: ${DOCKER_USERNAME}/recsys:spring-filtering-servicev1.0
     ports:
-      - ${FINE_RANKING_SERVICE_PORT}:8080
+      - ${FILTERING_SERVICE_PORT}:8080
   feature-store-service:
     build: ./services/feature-store-service
     image: ${DOCKER_USERNAME}/recsys:feature-store-servicev1.0
