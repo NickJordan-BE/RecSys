@@ -1,0 +1,15 @@
+{{- define "common.service" }}
+apiVersion: v1
+kind: Service
+metadata: 
+  name: {{ .Chart.Name }}-service
+  namespace: {{ .Values.namespaceOverride | default .Release.Namespace }}
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.global.servicePort }}
+      targetPort: {{ .Values.containerPort }}
+{{- end -}}

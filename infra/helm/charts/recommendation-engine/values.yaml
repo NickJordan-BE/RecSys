@@ -1,22 +1,28 @@
 global:
   environment: dev
+  servicePort: 80
 
 orchestrator:
   namespaceOverride: orchestrator-app
+  containerPort: 8080
   replicas: 1
 
 candidate-generation:
   namespaceOverride: candidate-generation-app
+  containerPort: 80
   replicas: 1
 
 filtering:
   namespaceOverride: filtering-app
+  containerPort: 8080
   replicas: 1
 
 feature-store:
   namespaceOverride: feature-store-app
+  containerPort: 4000
   replicas: 1
 
 ranking:
   namespaceOverride: ranking-app
+  containerPort: 8080
   replicas: 1
