@@ -1,0 +1,3 @@
+{{ if .Values.deployment.enabled }}
+    {{- include "common.deployment" . -}}
+{{ end }}

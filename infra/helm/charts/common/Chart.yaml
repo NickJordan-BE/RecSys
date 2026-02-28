@@ -1,0 +1,6 @@
+apiVersion: v2
+name: common
+description: A Helm chart for common templates used by multiple applications
+type: library
+version: 0.1.1
+appVersion: "1.0.0"

@@ -44,7 +44,7 @@ create_namespace() {
 }
 create_namespace "orchestrator-app"
 create_namespace "feature-store-app"
-create_namespace "candidate-gen-app"
+create_namespace "candidate-generation-app"
 create_namespace "filtering-app"
 create_namespace "ranking-app"
 

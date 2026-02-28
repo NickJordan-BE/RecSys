@@ -1,0 +1,22 @@
+global:
+  environment: dev
+
+orchestrator:
+  namespaceOverride: orchestrator-app
+  replicas: 1
+
+candidate-generation:
+  namespaceOverride: candidate-generation-app
+  replicas: 1
+
+filtering:
+  namespaceOverride: filtering-app
+  replicas: 1
+
+feature-store:
+  namespaceOverride: feature-store-app
+  replicas: 1
+
+ranking:
+  namespaceOverride: ranking-app
+  replicas: 1

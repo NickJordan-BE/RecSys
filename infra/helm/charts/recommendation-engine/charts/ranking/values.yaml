@@ -1,0 +1,5 @@
+imageRepository: ranking-app
+imageTag: v1.0.0
+deployment:
+  enabled: true
+  

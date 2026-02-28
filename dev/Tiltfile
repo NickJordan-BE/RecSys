@@ -1,4 +1,8 @@
 
 docker_build('orchestrator-app:v1.0.0', '../services/orchestrator')
+docker_build('filtering-app:v1.0.0', '../services/filtering')
+docker_build('feature-store-app:v1.0.0', '../services/feature-store')
+docker_build('ranking-app:v1.0.0', '../services/ranking')
+docker_build('candidate-generation-app:v1.0.0', '../services/candidate-generation')
 
-k8s_yaml(helm('../infra/helm/charts/orchestrator-app'))
+k8s_yaml(helm('../infra/helm/charts/recommendation-engine'))

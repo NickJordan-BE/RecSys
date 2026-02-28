@@ -1,0 +1,17 @@
+global:
+  environment: prod
+
+orchestrator:
+  replicas: 2
+
+candidate-generation:
+  replicas: 2
+
+filtering:
+  replicas: 2
+
+feature-store:
+  replicas: 2
+  
+generation:
+  replicas: 2
