@@ -6,23 +6,33 @@ orchestrator:
   namespaceOverride: orchestrator-app
   containerPort: 8080
   replicas: 1
+  deployment:
+    enabled: true
 
 candidate-generation:
   namespaceOverride: candidate-generation-app
   containerPort: 80
   replicas: 1
+  deployment:
+    enabled: true
 
 filtering:
   namespaceOverride: filtering-app
   containerPort: 8080
   replicas: 1
+  deployment:
+    enabled: true
 
 feature-store:
   namespaceOverride: feature-store-app
   containerPort: 4000
   replicas: 1
+  deployment:
+    enabled: true
 
 ranking:
   namespaceOverride: ranking-app
   containerPort: 8080
   replicas: 1
+  deployment:
+    enabled: true

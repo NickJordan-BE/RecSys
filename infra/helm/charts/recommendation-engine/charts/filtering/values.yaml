@@ -1,4 +1,9 @@
 imageRepository: filtering-app
 imageTag: v1.0.0
-deployment:
-  enabled: true
+resources: 
+  requests:
+    memory: "32Mi"
+    cpu: "100m"
+  limits:
+    memory: "64Mi"
+    cpu: "250m"
