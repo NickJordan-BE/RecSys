@@ -3,7 +3,7 @@
 CLUSTER_NAME="recsys-cluster-dev"
 
 # Check for Docker, Kind, Kubectl, Helm, and Tilt
-echo "Checking for required packages."
+echo "Checking for required packages..."
 check_command() {
     if command -v "$1" &> /dev/null; then
         echo "$1 is installed."
@@ -19,18 +19,24 @@ check_command "helm"
 check_command "tilt"
 
 # Create Kind cluster if it doesn't exit
-echo "Creating Kind cluster."
+echo "Creating Kind cluster..."
 kind create cluster --name "$CLUSTER_NAME" --config dev/kind-config.yaml --wait 3m || {
     echo "Failed to create Kind cluster."
     exit 1
 }
 
+echo "Installing Metrics Server..."
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+echo "Configuring Metrics Server..."
+kubectl patch deployment metrics-server -n kube-system --type 'json' -p '[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
+
 # Install NGINX Ingress Controller
-echo "Installing NGINX Ingress Controller."
+echo "Installing NGINX Ingress Controller..."
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 
 # Wait for Ingress to be ready
-echo "Waiting for Ingress controller to be ready."
+echo "Waiting for Ingress controller to be ready..."
 kubectl wait --namespace ingress-nginx \
   --for=condition=ready pod \
   --selector=app.kubernetes.io/component=controller \
@@ -38,7 +44,7 @@ kubectl wait --namespace ingress-nginx \
 
 
 # Create Namespaces for all services
-echo "Creating service namespaces."
+echo "Creating Service Namespaces..."
 create_namespace() {
     kubectl create namespace $1
 }
