@@ -7,3 +7,4 @@ infra/terraform/.terraform.lock.hcl
 *.DS_Store
 *kubeconfig.yaml
 *.tfvars
+*.tgz

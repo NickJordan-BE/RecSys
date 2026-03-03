@@ -9,7 +9,7 @@ orchestrator:
   deployment:
     enabled: true
   hpa:
-    enabled: true
+    enabled: false
     minReplicas: 1
     maxReplicas: 2
 
@@ -20,7 +20,7 @@ candidate-generation:
   deployment:
     enabled: true
   hpa:
-    enabled: true
+    enabled: false
     minReplicas: 1
     maxReplicas: 2
 
@@ -32,7 +32,7 @@ filtering:
   deployment:
     enabled: true
   hpa:
-    enabled: true
+    enabled: false
     minReplicas: 1
     maxReplicas: 2
 
@@ -44,7 +44,7 @@ feature-store:
   deployment:
     enabled: true
   hpa:
-    enabled: true
+    enabled: false
     minReplicas: 1
     maxReplicas: 2
 
@@ -56,6 +56,6 @@ ranking:
   deployment:
     enabled: true
   hpa:
-    enabled: true
+    enabled: false
     minReplicas: 1
     maxReplicas: 2
