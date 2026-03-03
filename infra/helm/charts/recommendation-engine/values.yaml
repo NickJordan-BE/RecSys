@@ -8,6 +8,10 @@ orchestrator:
   replicas: 1
   deployment:
     enabled: true
+  hpa:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 2
 
 candidate-generation:
   namespaceOverride: candidate-generation-app
@@ -15,6 +19,11 @@ candidate-generation:
   replicas: 1
   deployment:
     enabled: true
+  hpa:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 2
+
 
 filtering:
   namespaceOverride: filtering-app
@@ -22,6 +31,11 @@ filtering:
   replicas: 1
   deployment:
     enabled: true
+  hpa:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 2
+
 
 feature-store:
   namespaceOverride: feature-store-app
@@ -29,6 +43,11 @@ feature-store:
   replicas: 1
   deployment:
     enabled: true
+  hpa:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 2
+
 
 ranking:
   namespaceOverride: ranking-app
@@ -36,3 +55,7 @@ ranking:
   replicas: 1
   deployment:
     enabled: true
+  hpa:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 2
