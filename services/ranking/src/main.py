@@ -12,4 +12,4 @@ app.add_middleware(
 
 @app.get("/")
 def root():
-    return "Hello from Candidate Gen"
+    return "Hello from ranking"

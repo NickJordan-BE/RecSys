@@ -1,11 +1,19 @@
-FROM python:3.11
+FROM golang:1.25.5-alpine AS builder
 
-WORKDIR /code
+WORKDIR /app
 
-COPY ./requirements.txt /code/requirements.txt
+COPY ./go.mod ./go.sum /app/
 
-RUN pip install --no-cache --upgrade -r /code/requirements.txt
+RUN go mod download
 
-COPY ./src /code/src
+COPY ./server /app/server
 
-CMD ["fastapi", "run", "src/main.py", "--port", "80"]
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o server /app/server
+
+FROM alpine:latest
+
+WORKDIR /app
+
+COPY --from=builder /app/server .
+
+CMD ["./server"]
