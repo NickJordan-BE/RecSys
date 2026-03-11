@@ -82,6 +82,7 @@
 				<version>3.8.0</version>
 				<configuration>
 					<protocVersion>${protobuf-java.version}</protocVersion>
+					<failOnMissingSources>false</failOnMissingSources>
 					<binaryMavenPlugins>
 						<binaryMavenPlugin>
 							<groupId>io.grpc</groupId>

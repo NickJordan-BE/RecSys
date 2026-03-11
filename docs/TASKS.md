@@ -2,7 +2,7 @@ Phase 1: Day 0 - The Foundation (Infrastructure)
 Goal: Establish the underlying compute, networking, and stateful backing services required for the cluster to operate. No application logic yet.
 
 Kubernetes & Cluster Configuration
-[ ] Add readinessProbe and livenessProbe definitions to the base Helm chart.
+[X] Add readinessProbe and livenessProbe definitions to the base Helm chart.
 
 [ ] Deploy NGINX Ingress Controller to Kubernetes cluster
 

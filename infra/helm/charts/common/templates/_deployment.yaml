@@ -27,4 +27,32 @@ spec:
             - containerPort: {{ .Values.containerPort | default 8080 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.livenessProbe }}
+          livenessProbe:
+            {{- if eq .Values.probeType "grpc" }}
+            grpc:
+              port: {{ .Values.containerPort }}
+            {{- else if eq .Values.probeType "http"}}
+            httpGet:
+              path: {{ .Values.probePath }}
+              port: {{ .Values.containerPort }}
+            {{- end }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds | default 10 }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds | default 10 }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold | default 3 }}
+          {{- end }}
+          {{- if .Values.readinessProbe }}
+          readinessProbe:
+            {{- if eq .Values.probeType "grpc" }}
+            grpc:
+              port: {{ .Values.containerPort }}
+            {{- else if eq .Values.probeType "http"}}
+            httpGet:
+              path: {{ .Values.probePath }}
+              port: {{ .Values.containerPort }}
+            {{- end }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds | default 30}}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds | default 10 }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold | default 3}}
+          {{- end }}
 {{- end -}}
