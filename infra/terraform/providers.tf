@@ -1,39 +1,44 @@
+# S3 backend needs to be provisioned via AWS CLI or UI
 terraform {
-    required_providers {
-    kind = {
-            source = "tehcyx/kind"
-            version = "0.4.0"
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = ">= 6.36"
     }
+
     kubernetes = {
       source = "hashicorp/kubernetes"
-      version = "2.29.0"
+      version = ">= 3.0.1"
     }
+
     local = {
       source  = "hashicorp/local"
-      version = ">= 2.5.1"
+      version = ">= 2.7.0"
     }
 
     helm = {
       source  = "hashicorp/helm"
-      version = "2.7.1"
+      version = ">= 3.1.1"
     }
   }
 
-  required_version = ">= 1.5.0"
-}
-provider "kind" {}
-
-provider "helm" {
-  kubernetes {
-    config_path = local_file.kubeconfig.filename
+  backend "s3" {
+    bucket = "recsys-terraform-state-bucket"
+    key = "dev/state/terraform.tfstate"
+    region = "us-west-2"
+    encrypt = true
+    use_lockfile = true
   }
+
+  required_version = ">= 1.14.7"
 }
 
-resource "local_file" "kubeconfig" {
-  content  = kind_cluster.recsys-cluster-3.kubeconfig
-  filename = "${path.module}/kubeconfig.yaml"
-}
+# provider "helm" {
+#   kubernetes = {
+#     config_path = local_file.kubeconfig.filename
+#   }
+# }
 
-provider "kubernetes" {
-  config_path = local_file.kubeconfig.filename
-}
+# provider "kubernetes" {
+#   config_path = local_file.kubeconfig.filename
+# }

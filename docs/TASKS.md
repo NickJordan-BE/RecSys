@@ -4,11 +4,11 @@ Goal: Establish the underlying compute, networking, and stateful backing service
 Kubernetes & Cluster Configuration
 [X] Add readinessProbe and livenessProbe definitions to the base Helm chart.
 
-[ ] Deploy NGINX Ingress Controller to Kubernetes cluster
+[X] Deploy NGINX Ingress Controller to Kubernetes cluster
 
 [ ] Setup online repos for docker images and helm charts 
 
-[ ] Add S3 lock to terraform environment
+[X] Add S3 lock to terraform environment
 
 [ ] Refactor terraform to use EKS and AWS services for Kubernetes cluster
 
