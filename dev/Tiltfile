@@ -1,8 +1,51 @@
+load('ext://restart_process', 'docker_build_with_restart')
 
-docker_build('orchestrator-app:v1.0.0', '../services/orchestrator')
-docker_build('filtering-app:v1.0.0', '../services/filtering')
-docker_build('feature-store-app:v1.0.0', '../services/feature-store')
-docker_build('ranking-app:v1.0.0', '../services/ranking')
-docker_build('candidate-generation-app:v1.0.0', '../services/candidate-generation')
+docker_build(
+    'ranking-app:v1.0.0',
+    '../services/ranking',
+    live_update=[
+        sync('../services/ranking/src', '/app/src'),
+        run(
+            'pip install -r /app/requirements.txt',
+            trigger=['../services/ranking/requirements.txt']
+        )
+    ]
+)
+
+docker_build_with_restart(
+    'orchestrator-app:v1.0.0',
+    '../services/orchestrator',
+    entrypoint=['java', '-jar', 'app.jar'],
+    live_update=[
+        sync("../services/orchestrator/src", '/app/src'),
+    ],
+)
+
+docker_build_with_restart(
+    'filtering-app:v1.0.0',
+    '../services/filtering',
+    entrypoint=['java', '-jar', 'app.jar'],
+    live_update=[
+        sync('../services/filtering/src', '/app/src'),
+    ],
+)
+
+docker_build_with_restart(
+    'feature-store-app:v1.0.0',
+    '../services/feature-store',
+    entrypoint="./server",
+    live_update=[
+        sync("../services/feature-store/server", "/app/server"),
+    ],
+)
+
+docker_build_with_restart(
+    'candidate-generation-app:v1.0.0',
+    '../services/candidate-generation',
+    entrypoint="./server",
+    live_update=[
+        sync("../services/candidate-generation/server", "/app/server"),
+    ],
+)
 
 k8s_yaml(helm('../infra/helm/charts/recommendation-engine'))
