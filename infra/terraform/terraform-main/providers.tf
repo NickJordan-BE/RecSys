@@ -24,7 +24,7 @@ terraform {
 
   backend "s3" {
     bucket = "recsys-terraform-state-bucket"
-    key = "dev/state/terraform.tfstate"
+    key = "dev/main/state/terraform.tfstate"
     region = "us-west-2"
     encrypt = true
     use_lockfile = true
