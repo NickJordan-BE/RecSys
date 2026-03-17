@@ -21,8 +21,9 @@ module "vpc" {
   public_subnets  = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 
   enable_nat_gateway = true
-  single_nat_gateway = false
-  one_nat_gateway_per_az = true
+  # Set to false in high availability production
+  single_nat_gateway = true
+  one_nat_gateway_per_az = false
 
   enable_vpn_gateway = true
   enable_dns_hostnames = true
