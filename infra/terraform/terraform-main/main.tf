@@ -1,5 +1,5 @@
 # main.tf
-
+data "aws_caller_identity" "current" {}
 # resource "kubernetes_secret" "dockerhub-auth" {
 #     for_each = toset(local.targeted_namespaces)
 #     metadata {

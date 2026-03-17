@@ -33,6 +33,30 @@ terraform {
   required_version = ">= 1.14.7"
 }
 
+provider "aws" {
+  region = "us-west-2"
+}
+
+provider "aws" {
+  alias = "eks_admin"
+  region = "us-west-2"
+
+  assume_role {
+    role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/Recsys-EKS-Provisioning-Role"
+    session_name = "Terraform-EKS-Provisioning"
+  }
+}
+
+provider "aws" {
+  alias = "network_admin"
+  region = "us-west-2"
+  
+  assume_role {
+    role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/Recsys-Network-Provisioning-Role"
+    session_name = "Terraform-Network-Provisioning"
+  }
+}
+
 # provider "helm" {
 #   kubernetes = {
 #     config_path = local_file.kubeconfig.filename
