@@ -3,6 +3,28 @@
 locals {
     cluster_name = "prod-eks-cluster"
     cidr = "10.0.0.0/16"
+    region = "us-west-2"
+}
+
+data "aws_iam_policy_document" "s3_ecr_access" {
+  statement {
+    sid    = "AllowECRImageLayerDownloads"
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+
+    actions = [
+      "s3:GetObject"
+    ]
+
+    # Use specific buckets for ecr
+    resources = [
+      "arn:aws:s3:::prod-${local.region}-starport-layer-bucket/*"
+    ]
+  }
 }
 
 module "vpc" {
@@ -40,4 +62,57 @@ module "vpc" {
     Terraform = "true"
     Environment = "dev"
   }
+}
+
+resource "aws_security_group" "vpc_endpoints" {
+  provider = aws.network_admin
+  
+  name        = "${local.cluster_name}-vpc-endpoints-sg"
+  description = "Security group for ECR VPC Endpoints"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    description = "Allow HTTPS from VPC"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [local.cidr]
+  }
+
+  tags = {
+    Name = "${local.cluster_name}-vpc-endpoints-sg"
+  }
+}
+
+resource "aws_vpc_endpoint" "s3" {
+  provider = aws.network_admin
+
+  vpc_id       = module.vpc.vpc_id
+  service_name = "com.amazonaws.${local.region}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids = module.vpc.private_route_table_ids
+  policy = data.aws_iam_policy_document.s3_ecr_access.json
+}
+
+
+resource "aws_vpc_endpoint" "ecr-dkr-endpoint" {
+  provider = aws.network_admin
+  
+  vpc_id       = module.vpc.vpc_id
+  private_dns_enabled = true
+  service_name = "com.amazonaws.${local.region}.ecr.dkr"
+  vpc_endpoint_type = "Interface"
+  security_group_ids = [aws_security_group.vpc_endpoints.id] 
+  subnet_ids = module.vpc.private_subnets
+}
+
+resource "aws_vpc_endpoint" "ecr-api-endpoint" {
+  provider = aws.network_admin
+  
+  vpc_id       = module.vpc.vpc_id
+  service_name = "com.amazonaws.${local.region}.ecr.api"
+  vpc_endpoint_type = "Interface"
+  private_dns_enabled = true
+  security_group_ids = [aws_security_group.vpc_endpoints.id] 
+  subnet_ids = module.vpc.private_subnets
 }
