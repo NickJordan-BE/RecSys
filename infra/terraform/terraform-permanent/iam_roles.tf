@@ -2,38 +2,40 @@
 
 data "aws_caller_identity" "current" {}
 
+# Allows credentials to assume roles
 data "aws_iam_policy_document" "terraform_admin_trust" {
-    statement {
-        actions = ["sts:AssumeRole"]
+  statement {
+    actions = ["sts:AssumeRole"]
 
-        principals {
-          type = "AWS"
-          identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/recsys-terraform-admin"]
-        }
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/recsys-terraform-admin"]
     }
+  }
 }
 
 
 resource "aws_iam_role" "network_provisioning" {
-    name = "Recsys-Network-Provisioning-Role"
-    assume_role_policy = data.aws_iam_policy_document.terraform_admin_trust.json
+  name               = "Recsys-Network-Provisioning-Role"
+  assume_role_policy = data.aws_iam_policy_document.terraform_admin_trust.json
 }
 
 resource "aws_iam_role_policy_attachment" "networking_admin" {
-    role = aws_iam_role.network_provisioning.name
-    policy_arn = "arn:aws:iam::aws:policy/AmazonVPCFullAccess"
+  role       = aws_iam_role.network_provisioning.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonVPCFullAccess"
 }
 
 resource "aws_iam_role" "eks_provisioning" {
-    name = "Recsys-EKS-Provisioning-Role"
-    assume_role_policy = data.aws_iam_policy_document.terraform_admin_trust.json
+  name               = "Recsys-EKS-Provisioning-Role"
+  assume_role_policy = data.aws_iam_policy_document.terraform_admin_trust.json
 }
 
 resource "aws_iam_role_policy_attachment" "eks_admin" {
-    role = aws_iam_role.eks_provisioning.name
-    policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  role       = aws_iam_role.eks_provisioning.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
+# Add required permission to vpc role
 resource "aws_iam_role_policy" "network_eip_fix" {
   name = "EIP-Describe-Fix"
   role = aws_iam_role.network_provisioning.id

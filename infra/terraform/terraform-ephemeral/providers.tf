@@ -2,12 +2,12 @@
 terraform {
   required_providers {
     aws = {
-      source = "hashicorp/aws"
+      source  = "hashicorp/aws"
       version = ">= 6.36"
     }
 
     kubernetes = {
-      source = "hashicorp/kubernetes"
+      source  = "hashicorp/kubernetes"
       version = ">= 3.0.1"
     }
 
@@ -23,10 +23,10 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "recsys-terraform-state-bucket"
-    key = "dev/main/state/terraform.tfstate"
-    region = "us-west-2"
-    encrypt = true
+    bucket       = "recsys-terraform-state-bucket"
+    key          = "dev/main/state/terraform.tfstate"
+    region       = "us-west-2"
+    encrypt      = true
     use_lockfile = true
   }
 
@@ -38,21 +38,21 @@ provider "aws" {
 }
 
 provider "aws" {
-  alias = "eks_admin"
+  alias  = "eks_admin"
   region = "us-west-2"
 
   assume_role {
-    role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/Recsys-EKS-Provisioning-Role"
+    role_arn     = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/Recsys-EKS-Provisioning-Role"
     session_name = "Terraform-EKS-Provisioning"
   }
 }
 
 provider "aws" {
-  alias = "network_admin"
+  alias  = "network_admin"
   region = "us-west-2"
-  
+
   assume_role {
-    role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/Recsys-Network-Provisioning-Role"
+    role_arn     = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/Recsys-Network-Provisioning-Role"
     session_name = "Terraform-Network-Provisioning"
   }
 }
@@ -64,9 +64,9 @@ provider "helm" {
     exec = {
       api_version = "client.authentication.k8s.io/v1beta1"
       command     = "aws"
-      args        = [
-        "eks", 
-        "get-token", 
+      args = [
+        "eks",
+        "get-token",
         "--cluster-name", module.eks.cluster_name,
         "--role-arn", "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/Recsys-EKS-Provisioning-Role"
       ]
