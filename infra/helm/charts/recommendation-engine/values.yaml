@@ -3,15 +3,22 @@ global:
   servicePort: 80
 
 orchestrator:
+  serviceName: orchestrator-app
   namespaceOverride: orchestrator-app
   containerPort: 8080
   replicas: 1
+  ingressClass: alb
+  ingressPath: api/recommendations
   deployment:
     enabled: true
   hpa:
     enabled: false
     minReplicas: 1
     maxReplicas: 2
+  ingressAnnotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/type: external
 
 candidate-generation:
   namespaceOverride: candidate-generation-app

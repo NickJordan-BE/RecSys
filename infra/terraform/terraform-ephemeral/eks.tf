@@ -24,9 +24,9 @@ module "eks" {
     }
   }
 
-  # Optional: Adds the current caller identity as an administrator via cluster access entry
   enable_cluster_creator_admin_permissions = true
   endpoint_public_access                   = true
+  enable_irsa                              = true
 
   vpc_id                   = module.vpc.vpc_id
   subnet_ids               = module.vpc.private_subnets

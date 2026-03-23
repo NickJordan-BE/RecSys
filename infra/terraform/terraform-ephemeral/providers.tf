@@ -3,22 +3,22 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 6.36"
+      version = "6.36"
     }
 
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">= 3.0.1"
+      version = "3.0.1"
     }
 
     local = {
       source  = "hashicorp/local"
-      version = ">= 2.7.0"
+      version = "2.7.0"
     }
 
     helm = {
       source  = "hashicorp/helm"
-      version = ">= 3.1.1"
+      version = "3.1.1"
     }
   }
 
@@ -30,8 +30,10 @@ terraform {
     use_lockfile = true
   }
 
-  required_version = ">= 1.14.7"
+  required_version = "1.14.7"
 }
+
+data "aws_caller_identity" "current" {}
 
 provider "aws" {
   region = "us-west-2"
@@ -69,7 +71,7 @@ provider "aws" {
 provider "helm" {
   kubernetes = {
     host                   = module.eks.cluster_endpoint
-    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority.0.data)
+    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
     exec = {
       api_version = "client.authentication.k8s.io/v1beta1"
       command     = "aws"

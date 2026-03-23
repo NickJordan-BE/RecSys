@@ -1,15 +1,21 @@
-# main.tf
-data "aws_caller_identity" "current" {}
-# resource "kubernetes_secret" "dockerhub-auth" {
-#     for_each = toset(local.targeted_namespaces)
-#     metadata {
-#         name = "dockerhub-auth"
-#         namespace = each.value
-#     }
+resource "helm_release" "aws_load_balancer_controller" {
+  name       = "aws-load-balancer-controller"
+  repository = "https://aws.github.io/eks-charts"
+  chart      = "aws-load-balancer-controller"
+  namespace  = "kube-system"
+  version    = "1.7.2" 
 
-#     type = "kubernetes.io/dockerconfigjson"
+  values = [
+    <<-EOT
+      clusterName: ${module.eks.cluster_name}
+      serviceAccount:
+        create: true
+        name: aws-load-balancer-controller
+        annotations:
+          eks.amazonaws.com/role-arn: ${module.load_balancer_controller_irsa_role.arn}
+    EOT
+  ]
 
-#     data = {
-#         ".dockerconfigjson" = jsonencode(local.docker_config)
-#     }
-# }
+  depends_on = [module.eks]
+}
+
