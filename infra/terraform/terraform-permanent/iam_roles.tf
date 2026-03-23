@@ -35,6 +35,17 @@ resource "aws_iam_role_policy_attachment" "eks_admin" {
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
+resource "aws_iam_role" "elasticache_provisioning" {
+  name               = "Recsys-Elasticache-Provisioning-Role"
+  assume_role_policy = data.aws_iam_policy_document.terraform_admin_trust.json
+}
+
+resource "aws_iam_role_policy_attachment" "elasticache_admin" {
+  role       = aws_iam_role.elasticache_provisioning.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonElastiCacheFullAccess"
+}
+
+
 # Add required permission to vpc role
 resource "aws_iam_role_policy" "network_eip_fix" {
   name = "EIP-Describe-Fix"
@@ -46,6 +57,55 @@ resource "aws_iam_role_policy" "network_eip_fix" {
       {
         Effect   = "Allow"
         Action   = ["ec2:DescribeAddressesAttribute"]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "elasticache_logging_fix" {
+  name = "Cache-Logging-Permission-Fix"
+  role = aws_iam_role.elasticache_provisioning.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:PutResourcePolicy",
+          "logs:DescribeLogGroups",
+          "logs:TagResource",
+          "logs:PutRetentionPolicy",
+          "logs:ListTagsForResource",
+          "logs:DeleteLogGroup"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "elasticache_ec2_fix" {
+  name = "Cache-EC2-Permission-Fix"
+  role = aws_iam_role.elasticache_provisioning.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:CreateSecurityGroup",
+          "ec2:AuthorizeSecurityGroupIngress",
+          "ec2:CreateTags",
+          "ec2:RevokeSecurityGroupEgress",
+          "ec2:DescribeSecurityGroupRules",
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DeleteSecurityGroup"
+        ]
         Resource = "*"
       }
     ]

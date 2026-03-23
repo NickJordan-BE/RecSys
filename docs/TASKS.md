@@ -6,14 +6,14 @@ Kubernetes & Cluster Configuration
 
 [X] Deploy NGINX Ingress Controller to Kubernetes cluster
 
-[ ] Setup online repos for docker images and helm charts 
+[X] Setup online repos for docker images and helm charts 
 
 [X] Add S3 lock to terraform environment
 
-[ ] Refactor terraform to use EKS and AWS services for Kubernetes cluster
+[X] Refactor terraform to use EKS and AWS services for Kubernetes cluster
 
 Stateful Services Provisioning
-[ ] Deploy Redis (Online Feature Store) via Helm.
+[X] Deploy Redis (Online Feature Store) via Helm.
 
 [ ] Deploy Cassandra (User Profile DB) via Helm.
 

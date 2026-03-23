@@ -57,6 +57,15 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  alias  = "elasticache_admin"
+  region = "us-west-2"
+
+  assume_role {
+    role_arn     = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/Recsys-Elasticache-Provisioning-Role"
+    session_name = "Terraform-Elasticache-Provisioning"
+  }
+}
 provider "helm" {
   kubernetes = {
     host                   = module.eks.cluster_endpoint
