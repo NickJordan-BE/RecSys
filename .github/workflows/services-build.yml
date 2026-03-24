@@ -19,11 +19,12 @@ jobs:
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.get-services.outputs.matrix }}
+      repos: ${{ steps.get-services.outputs.changes }}
     steps:
       - uses: actions/checkout@v5
-      - id: get-services
-        uses: dorny/paths-filter@v4
+
+      - uses: dorny/paths-filter@v4
+        id: get-services
         with:
           filters: |
             candidate-generation: 
@@ -41,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: 
-        service: ${{ fromJSON(needs.detect-changes.outputs.matrix) }}
+        service: ${{ fromJSON(needs.detect-changes.outputs.repos) }}
     steps:
       - uses: actions/checkout@v5
 
