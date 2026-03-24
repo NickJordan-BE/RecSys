@@ -23,14 +23,19 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - id: get-services
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v4
         with:
           filters: |
-            candidate-generation: 'services/candidate-generation/**'
-            feature-store: 'services/feature-store/**'
-            filtering: 'services/filtering/**
-            orchestrator: 'services/orchestrator/**'
-            ranking: 'services/ranking/**'
+            candidate-generation: 
+              - 'services/candidate-generation/**'
+            feature-store: 
+              - 'services/feature-store/**'
+            filtering: 
+              - 'services/filtering/**
+            orchestrator: 
+              - 'services/orchestrator/**'
+            ranking: 
+              - 'services/ranking/**'
   build-and-push:
     needs: detect-changes
     runs-on: ubuntu-latest
