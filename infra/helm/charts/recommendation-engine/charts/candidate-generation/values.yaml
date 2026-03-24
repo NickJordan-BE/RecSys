@@ -1,4 +1,4 @@
-imageRepository: candidate-generation-app
+imageRepository: candidate-generation
 imageTag: v1.0.0
 resources: 
   requests:

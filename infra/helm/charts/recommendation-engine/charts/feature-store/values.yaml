@@ -1,4 +1,4 @@
-imageRepository: feature-store-app
+imageRepository: feature-store
 imageTag: v1.0.0
 resources:
   requests:

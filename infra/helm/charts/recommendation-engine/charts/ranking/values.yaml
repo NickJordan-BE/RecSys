@@ -1,4 +1,4 @@
-imageRepository: ranking-app
+imageRepository: ranking
 imageTag: v1.0.0
 resources: 
   requests:

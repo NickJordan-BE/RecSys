@@ -1,4 +1,4 @@
-imageRepository: filtering-app
+imageRepository: filtering
 imageTag: v1.0.0
 resources: 
   requests:

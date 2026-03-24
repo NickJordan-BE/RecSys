@@ -1,4 +1,4 @@
-imageRepository: orchestrator-app
+imageRepository: orchestrator
 imageTag: v1.0.0
 resources: 
   requests:
