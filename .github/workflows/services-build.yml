@@ -110,7 +110,7 @@ jobs:
           done
 
           helm package infra/helm/charts/recommendation-engine --version $CHART_VERSION
-          helm push recommendation-engine-$CHART_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}/recommendation-engine-umbrella-chart
+          helm push recommendation-engine-$CHART_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}
 
       - name: Commit GitOps Update
         uses: stefanzweifel/git-auto-commit-action@v5
