@@ -37,7 +37,7 @@ module "elasticache" {
   vpc_id     = module.vpc.vpc_id
 
   create_security_group = true
-  security_group_name   = "Recsys-redis-sg"
+  security_group_name   = "recsys-redis-sg"
   security_group_rules = {
     ingress_eks = {
       description                  = "EKS Worker Node Traffics"

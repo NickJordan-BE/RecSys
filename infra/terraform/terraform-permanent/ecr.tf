@@ -6,7 +6,8 @@ locals {
     "recsys/feature-store",
     "recsys/filtering",
     "recsys/ranking",
-    "recsys/recommendation-engine-umbrella-chart"
+    "recsys/recommendation-engine-umbrella-chart",
+    "recsys/common"
   ]
 }
 
