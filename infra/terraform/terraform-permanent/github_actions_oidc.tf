@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "oidc_trust_policy" {
             values = ["sts.amazonaws.com"]
         }
         condition {
-            test = "StringEquals"
+            test = "StringLike"
             variable = "token.actions.githubusercontent.com:sub"
             values = ["repo:NickJordan-BE/RecSys:*"]
         }
@@ -47,6 +47,7 @@ resource "aws_iam_role_policy" "github_actions_ecr_push" {
       {
         Effect   = "Allow"
         Action   = [
+            "ecr:GetAuthorizationToken",
             "ecr:BatchCheckLayerAvailability",
             "ecr:CompleteLayerUpload",
             "ecr:InitiateLayerUpload",
