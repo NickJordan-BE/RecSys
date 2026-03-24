@@ -57,8 +57,11 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build and Push to ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
           cd services/${{ matrix.service }}
+          
           docker build -t $REGISTRY/${{ env.ECR_REPO }}/${{ matrix.service }}:${{ github.sha }} .
           docker push $REGISTRY/${{ env.ECR_REPO }}/${{ matrix.service }}:${{ github.sha }} 
   
