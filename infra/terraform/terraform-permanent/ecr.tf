@@ -7,7 +7,7 @@ locals {
     "recsys/filtering",
     "recsys/ranking",
     "recsys/candidate-generation",
-    "recsys/recommendation-engine-umbrella-chart",
+    "recsys/recommendation-engine",
     "recsys/common"
   ]
 }

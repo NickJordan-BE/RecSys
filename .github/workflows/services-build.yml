@@ -8,7 +8,7 @@ on:
 
 permissions:
   id-token: write 
-  contents: read
+  contents: write
 
 env:
   AWS_REGION: us-west-2
@@ -103,6 +103,11 @@ jobs:
           yq e -i '.version = "$CHART_VERSION"' "infra/helm/charts/recommendation-engine/Chart.yaml"
 
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | helm registry login --username AWS --password-stdin $REGISTRY
+
+          for dir in infra/helm/charts/recommendation-engine/charts/*/; do
+            echo "Updating dependencies for $dir"
+            helm dependency update "./$dir"
+          done
 
           helm package infra/helm/charts/recommendation-engine --version $CHART_VERSION
           helm push recommendation-engine-$CHART_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}/recommendation-engine-umbrella-chart
