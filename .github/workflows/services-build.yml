@@ -31,7 +31,7 @@ jobs:
             feature-store: 
               - 'services/feature-store/**'
             filtering: 
-              - 'services/filtering/**
+              - 'services/filtering/**'
             orchestrator: 
               - 'services/orchestrator/**'
             ranking: 
