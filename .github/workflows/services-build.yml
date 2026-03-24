@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - id: get-services
-        uses: dorny/path-filters@v3
+        uses: dorny/paths-filter@v3
         with:
           filters: |
             candidate-generation: 'services/candidate-generation/**'
