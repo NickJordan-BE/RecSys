@@ -14,7 +14,6 @@ data "aws_iam_policy_document" "terraform_admin_trust" {
   }
 }
 
-
 resource "aws_iam_role" "network_provisioning" {
   name               = "Recsys-Network-Provisioning-Role"
   assume_role_policy = data.aws_iam_policy_document.terraform_admin_trust.json

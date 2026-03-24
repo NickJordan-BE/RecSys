@@ -1,0 +1,58 @@
+name: Build and Push Service Images to ECR
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'services/**'
+
+permissions:
+  id-token: write 
+  contents: read
+
+env:
+  AWS_REGION: us-west-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  ECR_REPO: recsys
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.get-services.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: get-services
+        uses: dorny/path-filters@v3
+        with:
+          filters: |
+            candidate-generation: 'services/candidate-generation/**'
+            feature-store: 'services/feature-store/**'
+            filtering: 'services/filtering/**
+            orchestrator: 'services/orchestrator/**'
+            ranking: 'services/ranking/**'
+  build-and-push:
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        service: ${{ fromJSON(needs.detect-changes.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Configure AWS Credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/Recsys-Github-Actions-ECR-Role
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and Push to ECR
+        run: |
+          cd services/${{ matrix.service }}
+          docker build -t ${{ env.ECR_REPO }}/${{ matrix.service }}: ${{ github.sha }}
+          docker push ${{ env.ECR_REPO }}/${{ matrix.service }}: ${{ github.sha }} 
+  
