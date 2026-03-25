@@ -52,7 +52,7 @@ jobs:
 
           for dir in infra/helm/charts/recommendation-engine/charts/*/; do
             echo "Update Dependency Version for: $dir"
-            yq e -i "(.dependencies[] | select(.name == "common")).version = \"$CHART_VERSION\"" "$dir/Chart.yaml"
+            VERSION="$CHART_VERSION" yq e -i '(.dependencies[] | select(.name == "common")).version = env(VERSION)' "$dir/Chart.yaml"
           done
 
           for dir in infra/helm/charts/recommendation-engine/charts/*/; do
