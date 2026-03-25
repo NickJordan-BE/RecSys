@@ -8,7 +8,7 @@ orchestrator:
   containerPort: 8080
   replicas: 1
   ingressClass: alb
-  ingressPath: api/recommendations
+  ingressPath: /api/recommendations
   deployment:
     enabled: true
   hpa:
