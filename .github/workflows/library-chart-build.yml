@@ -77,4 +77,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore(helm): update service chart dependencies for new library chart and bump umbrella chart version"
-          file_pattern: infra/helm/charts/recommendation-engine/**
+          file_pattern: infra/helm/charts/**
