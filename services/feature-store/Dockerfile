@@ -18,4 +18,4 @@ COPY --from=builder /app/server .
 
 CMD [ "./server" ]
 
-ENTRYPOINT [ "./serbver" ]
+ENTRYPOINT [ "./server" ]
