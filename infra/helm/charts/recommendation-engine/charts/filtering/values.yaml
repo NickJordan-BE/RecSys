@@ -1,6 +1,6 @@
 imageRepository: filtering
-imageTag: v1.0.0
-resources: 
+imageTag: 9ce13c598b06f23b04b5e57232f80d61cc6e738f
+resources:
   requests:
     memory: 256Mi
     cpu: 100m
