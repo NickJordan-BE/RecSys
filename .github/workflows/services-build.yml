@@ -109,7 +109,7 @@ jobs:
           
           echo "Bumping Recommendation Engine from $CURRENT_VERSION to $NEW_VERSION"
           
-          yq e -i ".version = \"$NEW_VERSION\"" "../infra/helm/charts/recommendation-engine/Chart.yaml"
+          yq e -i ".version = \"$NEW_VERSION\"" "infra/helm/charts/recommendation-engine/Chart.yaml"
 
           for dir in infra/helm/charts/recommendation-engine/charts/*/; do
             echo "Updating dependencies for $dir"
