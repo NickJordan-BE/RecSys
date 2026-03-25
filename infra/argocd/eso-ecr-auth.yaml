@@ -1,0 +1,57 @@
+---
+# 1. The Service Account for AWS Authentication (IRSA)
+# This assumes you have an IAM Role with ecr:GetAuthorizationToken permissions
+# apiVersion: v1
+# kind: ServiceAccount
+# metadata:
+#   name: argocd-ecr-sa
+#   namespace: argocd
+#   annotations:
+#     # Replace with your actual AWS Account ID and IAM Role Name
+#     eks.amazonaws.com/role-arn: arn:aws:iam::1234567890iw12:role/ArgoCDECRRole
+# ---
+# 2. The ESO Generator
+# This tells ESO *how* to authenticate with AWS to get the token
+apiVersion: generators.external-secrets.io/v1alpha1
+kind: ECRAuthorizationToken
+metadata:
+  name: ecr-token-generator
+  namespace: argocd
+spec:
+  region: us-west-2
+  auth:
+    jwt:
+      serviceAccountRef:
+        name: argocd-ecr-sa
+---
+# 3. The ExternalSecret
+# This wires the token generator to the final Kubernetes Secret ArgoCD needs
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: argocd-ecr-credentials
+  namespace: argocd
+spec:
+  # Refresh the token every 8 hours (well before the 12-hour AWS expiration)
+  refreshInterval: "8h" 
+  target:
+    name: aws-ecr-repo-secret # The actual Secret that will be created
+    template:
+      metadata:
+        labels:
+          # Crucial: Tells ArgoCD to use this secret for repositories
+          argocd.argoproj.io/secret-type: repository
+      type: Opaque
+      data:
+        name: aws-ecr-registry
+        url: "963957630095.dkr.ecr.us-west-2.amazonaws.com" # Replace with your ECR URL
+        type: helm
+        enableOCI: "true"
+        username: AWS
+        password: "{{ .password }}" # Injected by the generator below
+  dataFrom:
+  - sourceRef:
+      generatorRef:
+        apiVersion: generators.external-secrets.io/v1alpha1
+        kind: ECRAuthorizationToken
+        name: ecr-token-generator

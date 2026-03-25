@@ -5,8 +5,8 @@ module "load_balancer_controller_irsa_role" {
   providers = {
     aws = aws.eks_admin
   }
-  
-  name                           = "aws-load-balancer-controller"
+
+  name                                   = "aws-load-balancer-controller"
   attach_load_balancer_controller_policy = true
 
   oidc_providers = {
@@ -16,3 +16,7 @@ module "load_balancer_controller_irsa_role" {
     }
   }
 }
+
+
+
+
