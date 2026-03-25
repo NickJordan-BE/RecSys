@@ -68,6 +68,7 @@ provider "aws" {
     session_name = "Terraform-Elasticache-Provisioning"
   }
 }
+
 provider "helm" {
   kubernetes = {
     host                   = module.eks.cluster_endpoint
