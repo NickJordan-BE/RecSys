@@ -43,7 +43,7 @@ jobs:
       - name: Update Subcharts and Package Umbrella Chart
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          CHART_VERSION: 1.0.${{ github.run_number }}
+          CHART_VERSION: 0.2.${{ github.run_number }}
         run: |
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | helm registry login --username AWS --password-stdin $REGISTRY
 
