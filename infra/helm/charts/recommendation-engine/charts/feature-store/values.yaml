@@ -1,5 +1,5 @@
 imageRepository: 963957630095.dkr.ecr.us-west-2.amazonaws.com/recsys/feature-store
-imageTag: 9ce13c598b06f23b04b5e57232f80d61cc6e738f
+imageTag: 8148872b6d11c2fb67bd451c497db96e6c02322b
 resources:
   requests:
     memory: 32Mi

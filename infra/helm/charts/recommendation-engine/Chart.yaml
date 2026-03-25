@@ -2,7 +2,7 @@ apiVersion: v2
 name: recommendation-engine
 description: A Helm chart used as an Umbrella chart to install all microservice for the recsys
 type: application
-version: 0.1.4
+version: 0.1.5
 appVersion: "1.0.0"
 dependencies:
   - name: common
