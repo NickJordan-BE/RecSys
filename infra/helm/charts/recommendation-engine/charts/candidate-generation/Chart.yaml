@@ -6,5 +6,5 @@ version: 0.1.0
 appVersion: "1.0.0"
 dependencies:
   - name: common
-    version: 0.2.6
+    version: 0.2.8
     repository: oci://963957630095.dkr.ecr.us-west-2.amazonaws.com/recsys
