@@ -118,6 +118,7 @@ jobs:
 
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | helm registry login --username AWS --password-stdin $REGISTRY
 
+          helm dependency update infra/helm/charts/recommendation-engine          
           helm package infra/helm/charts/recommendation-engine --version $NEW_VERSION
           helm push recommendation-engine-$NEW_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}
 
