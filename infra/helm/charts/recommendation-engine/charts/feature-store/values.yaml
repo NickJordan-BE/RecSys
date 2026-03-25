@@ -1,4 +1,4 @@
-imageRepository: feature-store
+imageRepository: 963957630095.dkr.ecr.us-west-2.amazonaws.com/recsys/feature-store
 imageTag: 9ce13c598b06f23b04b5e57232f80d61cc6e738f
 resources:
   requests:
