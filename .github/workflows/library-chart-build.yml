@@ -48,7 +48,7 @@ jobs:
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | helm registry login --username AWS --password-stdin $REGISTRY
 
           helm package infra/helm/charts/common --version $CHART_VERSION
-          helm push common-$CHART_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}/common
+          helm push common-$CHART_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}
 
           for dir in infra/helm/charts/recommendation-engine/charts/*/; do
             echo "Update Dependency Version for: $dir"
