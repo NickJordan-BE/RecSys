@@ -67,8 +67,8 @@ jobs:
           echo "Bumping Recommendation Engine from $CURRENT_VERSION to $NEW_VERSION"
           
           yq e -i ".version = \"$NEW_VERSION\"" "infra/helm/charts/recommendation-engine/Chart.yaml"
-          
-          yq e -i ".version = \"$CHART_VERSION"" "infra/helm/charts/common/Chart.yaml"
+
+          yq e -i ".version = \"$CHART_VERSION\"" "infra/helm/charts/common/Chart.yaml"
 
           helm package infra/helm/charts/recommendation-engine --version $NEW_VERSION
           helm push recommendation-engine-$NEW_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}
