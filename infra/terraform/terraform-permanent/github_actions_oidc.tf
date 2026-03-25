@@ -37,6 +37,12 @@ resource "aws_iam_role" "github_actions_ecr_push" {
   assume_role_policy = data.aws_iam_policy_document.oidc_trust_policy.json
 }
 
+resource "aws_iam_role_policy_attachment" "github_actions_ecr_push" {
+  role       = aws_iam_role.github_actions_ecr_push.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
+}
+
+
 resource "aws_iam_role_policy" "github_actions_ecr_push" {
   name = "Github-Actions-ECR-Push"
   role = aws_iam_role.github_actions_ecr_push.id
