@@ -1,0 +1,78 @@
+name: Build and Push Libary Helm Chart to ECR and Update Umbrella Chart Dependencies
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'infra/helm/charts/common/**'
+
+concurrency: 
+  group: umbrella-chart-versioning
+  cancel-in-progress: false 
+
+permissions:
+  id-token: write 
+  contents: write
+
+env:
+  AWS_REGION: us-west-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  ECR_REPO: recsys
+
+jobs:
+  build-helm-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Configure AWS Credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/Recsys-Github-Actions-ECR-Role
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      
+      - name: Set up helm
+        uses: azure/setup-helm@v4
+      
+      - name: Update Subcharts and Package Umbrella Chart
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          CHART_VERSION: 1.0.${{ github.run_number }}
+        run: |
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | helm registry login --username AWS --password-stdin $REGISTRY
+
+          helm package infra/helm/charts/common --version $CHART_VERSION
+          helm push common-$CHART_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}/common
+
+          for dir in infra/helm/charts/recommendation-engine/charts/*/; do
+            echo "Update Dependency Version for: $dir"
+            yq e -i '(.dependencies[] | select(.name == "common")).version = "$CHART_VERSION"' "$dir/Chart.yaml"
+          done
+
+          for dir in infra/helm/charts/recommendation-engine/charts/*/; do
+            echo "Updating dependencies for $dir"
+            helm dependency update "./$dir"
+          done
+
+          CURRENT_VERSION=$(yq '.version' infra/helm/charts/recommendation-engine/Chart.yaml)
+          
+          NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+          
+          echo "Bumping Recommendation Engine from $CURRENT_VERSION to $NEW_VERSION"
+          
+          yq e -i '.version = "$NEW_VERSION"' "infra/helm/charts/recommendation-engine/Chart.yaml"
+
+          helm package infra/helm/charts/recommendation-engine --version $NEW_VERSION
+          helm push recommendation-engine-$NEW_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}
+
+      - name: Commit GitOps Update
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(helm): update service chart dependencies for new library chart and bump umbrella chart version"
+          file_pattern: infra/helm/charts/recommendation-engine/**

@@ -6,6 +6,10 @@ on:
     paths:
       - 'services/**'
 
+concurrency: 
+  group: umbrella-chart-versioning
+  cancel-in-progress: false 
+
 permissions:
   id-token: write 
   contents: write
@@ -90,7 +94,6 @@ jobs:
       - name: Update Subcharts and Package Umbrella Chart
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          CHART_VERSION: 1.0.${{ github.run_number }}
           CHANGED_SERVICES: ${{ needs.detect-changes.outputs.repos }}
         run: |
           services=$(echo $CHANGED_SERVICES | jq -r '.[]')
@@ -100,7 +103,13 @@ jobs:
             yq e -i '.imageTag = "${{ github.sha }}"' "infra/helm/charts/recommendation-engine/charts/$service/values.yaml"
           done
 
-          yq e -i '.version = "$CHART_VERSION"' "infra/helm/charts/recommendation-engine/Chart.yaml"
+          CURRENT_VERSION=$(yq '.version' infra/helm/charts/recommendation-engine/Chart.yaml)
+          
+          NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+          
+          echo "Bumping Recommendation Engine from $CURRENT_VERSION to $NEW_VERSION"
+          
+          yq e -i '.version = "$NEW_VERSION"' "infra/helm/charts/recommendation-engine/Chart.yaml"
 
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | helm registry login --username AWS --password-stdin $REGISTRY
 
@@ -109,11 +118,11 @@ jobs:
             helm dependency update "./$dir"
           done
 
-          helm package infra/helm/charts/recommendation-engine --version $CHART_VERSION
-          helm push recommendation-engine-$CHART_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}
+          helm package infra/helm/charts/recommendation-engine --version $NEW_VERSION
+          helm push recommendation-engine-$NEW_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}
 
       - name: Commit GitOps Update
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore(helm): deploy updated services ${{ github.sha }} and bump umbrella chart to v1.0.${{ github.run_number }}"
+          commit_message: "chore(helm): deploy updated services ${{ github.sha }} and bump umbrella chart version"
           file_pattern: infra/helm/charts/recommendation-engine/**
