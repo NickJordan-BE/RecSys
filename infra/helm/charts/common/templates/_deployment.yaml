@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app.kubernetes.io/name: {{ .Chart.Name }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets | default "dockerhub-auth" }}
