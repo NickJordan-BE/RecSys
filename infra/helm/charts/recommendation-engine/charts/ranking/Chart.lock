@@ -1,6 +1,6 @@
 dependencies:
 - name: common
   repository: oci://963957630095.dkr.ecr.us-west-2.amazonaws.com/recsys
-  version: 0.2.5
-digest: sha256:4db56d2a898ccf5bdc9866dfcb7c8e37fa463a13e0f4aeb15498a566d5c18c6f
-generated: "2026-03-25T02:52:46.740447809Z"
+  version: 0.2.6
+digest: sha256:153e7f1d6b94239b8209674040eff75863837258dffb322a34267d9bc3ce7b49
+generated: "2026-03-25T02:55:27.869054099Z"
