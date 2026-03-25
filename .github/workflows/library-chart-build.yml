@@ -70,6 +70,7 @@ jobs:
 
           yq e -i ".version = \"$CHART_VERSION\"" "infra/helm/charts/common/Chart.yaml"
 
+          helm dependency update infra/helm/charts/recommendation-engine
           helm package infra/helm/charts/recommendation-engine --version $NEW_VERSION
           helm push recommendation-engine-$NEW_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}
 
