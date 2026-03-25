@@ -109,14 +109,14 @@ jobs:
           
           echo "Bumping Recommendation Engine from $CURRENT_VERSION to $NEW_VERSION"
           
-          yq e -i '.version = "$NEW_VERSION"' "infra/helm/charts/recommendation-engine/Chart.yaml"
-
-          aws ecr get-login-password --region ${{ env.AWS_REGION }} | helm registry login --username AWS --password-stdin $REGISTRY
+          yq e -i ".version = \"$NEW_VERSION\"" "../infra/helm/charts/recommendation-engine/Chart.yaml"
 
           for dir in infra/helm/charts/recommendation-engine/charts/*/; do
             echo "Updating dependencies for $dir"
             helm dependency update "./$dir"
           done
+
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | helm registry login --username AWS --password-stdin $REGISTRY
 
           helm package infra/helm/charts/recommendation-engine --version $NEW_VERSION
           helm push recommendation-engine-$NEW_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}
