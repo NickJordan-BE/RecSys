@@ -7,6 +7,7 @@ import (
 	"net/http"
 )
 
+
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode("Hello world from Candidate gen")
