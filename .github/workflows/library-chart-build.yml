@@ -1,5 +1,4 @@
-name: Build and Push Libary Helm Chart to ECR and Update Umbrella Chart Dependencies
-
+name: Update Library Chart Version and Service Dependencies
 on:
   push:
     branches: ["main"]
@@ -47,7 +46,7 @@ jobs:
               echo "Skipping common directory..."
               continue
             fi
-            
+
             echo "Updating dependencies for $dir"
             helm dependency update "./$dir"
           done
