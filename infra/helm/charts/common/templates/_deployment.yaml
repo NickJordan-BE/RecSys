@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Values.namespaceOverride | default .Release.Namespace }}
   labels:
     app.kubernetes.io/name: {{ .Chart.Name }}
-    env: {{ .Values.global.environment }}
+    env: {{ .Values.environment }}
 spec:
   replicas: {{ .Values.replicas | default 2 }}
   selector:

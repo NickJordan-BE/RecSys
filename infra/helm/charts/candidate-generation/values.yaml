@@ -1,3 +1,14 @@
+namespaceOverride: candidate-generation-app
+servicePort: 80
+containerPort: 80
+replicas: 1
+environment: production
+deployment:
+  enabled: true
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
 imageRepository: 963957630095.dkr.ecr.us-west-2.amazonaws.com/recsys/candidate-generation
 imageTag: 9ce13c598b06f23b04b5e57232f80d61cc6e738f
 resources:

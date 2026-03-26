@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: candidate-generation
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/NickJordan-BE/RecSys.git'
+    path: 'infra/helm/charts/candidate-generation'
+    targetRevision: main # ArgoCD will watch the main branch for changes
+  destination:
+    server: 'https://kubernetes.default.svc'
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  # retry:
+  #     limit: 3
+  #     backoff:
+  #       duration: 5s 
+  #       factor: 2 
+  #       maxDuration: 3m 

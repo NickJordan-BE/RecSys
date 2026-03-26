@@ -1,3 +1,14 @@
+namespaceOverride: filtering-app
+containerPort: 8080
+servicePort: 80
+environment: production
+replicas: 1
+deployment:
+  enabled: true
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
 imageRepository: 963957630095.dkr.ecr.us-west-2.amazonaws.com/recsys/filtering
 imageTag: 9ce13c598b06f23b04b5e57232f80d61cc6e738f
 resources:
