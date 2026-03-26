@@ -2,5 +2,5 @@ apiVersion: v2
 name: common
 description: A Helm chart for common templates used by multiple applications
 type: library
-version: 0.2.10
+version: 0.2.13
 appVersion: "1.0.0"
