@@ -66,32 +66,3 @@ resource "helm_release" "argo_cd_controller" {
 
   depends_on = [module.eks, helm_release.aws_load_balancer_controller]
 }
-
-
-# resource "helm_release" "external_secrets" {
-#   name       = "external-secrets"
-#   repository = "https://charts.external-secrets.io"
-#   chart      = "external-secrets"
-#   namespace  = "argocd"
-#   version    = "2.1.0"
-
-#   set = [
-#     {
-#       name  = "installCRDs"
-#       value = "true"
-#     }
-#   ]
-
-#   depends_on = [module.eks, helm_release.argo_cd_controller]
-# }
-
-# resource "kubernetes_service_account_v1" "argocd_ecr_sa" {
-#   metadata {
-#     name      = "argocd-ecr-sa"
-#     namespace = "argocd"
-#     annotations = {
-#       "eks.amazonaws.com/role-arn" = module.argocd_ecr_irsa_role.arn
-#     }
-#   }
-#   depends_on = [module.argocd_ecr_irsa_role, helm_release.argo_cd_controller]
-# }
