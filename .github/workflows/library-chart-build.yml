@@ -14,11 +14,6 @@ permissions:
   id-token: write 
   contents: write
 
-env:
-  AWS_REGION: us-west-2
-  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  ECR_REPO: recsys
-
 jobs:
   build-helm-and-commit:
     runs-on: ubuntu-latest
@@ -27,54 +22,35 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Configure AWS Credentials using OIDC
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/Recsys-Github-Actions-ECR-Role
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Login to ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-      
       - name: Set up helm
         uses: azure/setup-helm@v4
       
       - name: Update Subcharts and Package Umbrella Chart
         env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           CHART_VERSION: 0.2.${{ github.run_number }}
         run: |
-          aws ecr get-login-password --region ${{ env.AWS_REGION }} | helm registry login --username AWS --password-stdin $REGISTRY
 
-          helm package infra/helm/charts/common --version $CHART_VERSION
-          helm push common-$CHART_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}
+          yq e -i ".version = \"$CHART_VERSION\"" "infra/helm/charts/common/Chart.yaml"
+          
+          for dir in infra/helm/charts/*/; do
+            if [ "$(basename "$dir")" = "common" ]; then
+              echo "Skipping common directory..."
+              continue
+            fi
 
-          for dir in infra/helm/charts/recommendation-engine/charts/*/; do
-            echo "Update Dependency Version for: $dir"
+            echo "Update Dependency Version for $dir"
             VERSION="$CHART_VERSION" yq e -i '(.dependencies[] | select(.name == "common")).version = env(VERSION)' "$dir/Chart.yaml"
           done
 
-          for dir in infra/helm/charts/recommendation-engine/charts/*/; do
+          for dir in infra/helm/charts/*/; do
+            if [ "$(basename "$dir")" = "common" ]; then
+              echo "Skipping common directory..."
+              continue
+            fi
+            
             echo "Updating dependencies for $dir"
             helm dependency update "./$dir"
           done
-
-          VERSION="$CHART_VERSION" yq e -i '(.dependencies[] | select(.name == "common")).version = env(VERSION)' "infra/helm/charts/recommendation-engine/Chart.yaml"
-          helm dependency update infra/helm/charts/recommendation-engine
-
-          CURRENT_VERSION=$(yq '.version' infra/helm/charts/recommendation-engine/Chart.yaml)
-          
-          NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
-          
-          echo "Bumping Recommendation Engine from $CURRENT_VERSION to $NEW_VERSION"
-          
-          yq e -i ".version = \"$NEW_VERSION\"" "infra/helm/charts/recommendation-engine/Chart.yaml"
-
-          yq e -i ".version = \"$CHART_VERSION\"" "infra/helm/charts/common/Chart.yaml"
-
-          helm package infra/helm/charts/recommendation-engine --version $NEW_VERSION
-          helm push recommendation-engine-$NEW_VERSION.tgz oci://$REGISTRY/${{ env.ECR_REPO }}
 
       - name: Commit GitOps Update
         uses: stefanzweifel/git-auto-commit-action@v5
