@@ -1,0 +1,20 @@
+namespaceOverride: candidate-generation-app
+servicePort: 80
+containerPort: 80
+replicas: 1
+environment: dev
+deployment:
+  enabled: true
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+imageRepository: candidate-generation-app
+imageTag: v1.0.0 
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 100m
+  limits:
+    memory: 256Mi
+    cpu: 250m
