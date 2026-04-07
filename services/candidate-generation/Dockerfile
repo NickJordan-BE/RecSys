@@ -1,10 +1,26 @@
-FROM golang:1.25.5-alpine AS builder
+FROM golang:1.26.1-alpine AS base
 
 WORKDIR /app
 
 COPY ./go.mod ./go.sum /app/
 
 RUN go mod download
+
+FROM golangci/golangci-lint:v2.11.4-alpine AS linter
+
+WORKDIR /app
+
+COPY ./go.mod ./go.sum .golangci.yml /app/
+
+COPY ./server ./server
+
+RUN golangci-lint run ./server
+
+FROM base AS builder
+
+WORKDIR /app
+
+COPY --from=linter /etc/passwd /dev/null
 
 COPY ./server /app/server
 
