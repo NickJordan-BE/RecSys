@@ -10,3 +10,4 @@
 *.tfvars
 *.tgz
 *.ruff_cache
+*.pb*

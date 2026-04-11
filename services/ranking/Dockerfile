@@ -1,8 +1,8 @@
-FROM python:3.11 AS base
+FROM python:3.14.4-slim-bookworm AS base
 
 WORKDIR /app
 
-COPY ./requirements.txt /app/requirements.txt
+COPY ./services/ranking/requirements.txt /app/requirements.txt
 
 RUN pip install --no-cache --upgrade -r /app/requirements.txt
 
@@ -14,8 +14,14 @@ RUN ruff check . && ruff format --check --diff
 
 FROM base AS final
 
-COPY --from=style-check /etc/passwd /dev/null
+WORKDIR /app
 
-COPY ./src /app/src
+COPY ./api/proto ./api/proto
 
-CMD ["fastapi", "run", "src/main.py", "--port", "80"]
+RUN python -m grpc_tools.protoc -I grpc/gen/python=./api/proto \
+  --python_out=. --grpc_python_out=. \
+  ./api/proto/*.proto
+
+COPY ./services/ranking/src /app/src
+
+ENTRYPOINT ["fastapi", "run", "src/main.py", "--port", "80"]

@@ -2,7 +2,8 @@ load('ext://restart_process', 'docker_build_with_restart')
 
 docker_build(
     'ranking-app:v1.0.0',
-    '../services/ranking',
+    dockerfile='../services/ranking/Dockerfile',
+    context='..',
     live_update=[
         sync('../services/ranking/src', '/app/src'),
         run(
@@ -14,8 +15,9 @@ docker_build(
 
 docker_build_with_restart(
     'orchestrator-app:v1.0.0',
-    '../services/orchestrator',
-    entrypoint=['java', '-jar', 'app.jar'],
+    dockerfile='../services/orchestrator/Dockerfile',
+    context='..',
+    entrypoint=["java", "org.springframework.boot.loader.launch.JarLauncher"],
     live_update=[
         sync("../services/orchestrator/src", '/app/src'),
     ],
@@ -23,8 +25,9 @@ docker_build_with_restart(
 
 docker_build_with_restart(
     'filtering-app:v1.0.0',
-    '../services/filtering',
-    entrypoint=['java', '-jar', 'app.jar'],
+    dockerfile='../services/filtering/Dockerfile',
+    context='..',
+    entrypoint=["java", "org.springframework.boot.loader.launch.JarLauncher"],
     live_update=[
         sync('../services/filtering/src', '/app/src'),
     ],
@@ -32,7 +35,8 @@ docker_build_with_restart(
 
 docker_build_with_restart(
     'feature-store-app:v1.0.0',
-    '../services/feature-store',
+    dockerfile='../services/feature-store/Dockerfile',
+    context='..',
     entrypoint="./server",
     live_update=[
         sync("../services/feature-store/server", "/app/server"),
@@ -41,7 +45,8 @@ docker_build_with_restart(
 
 docker_build_with_restart(
     'candidate-generation-app:v1.0.0',
-    '../services/candidate-generation',
+    dockerfile='../services/candidate-generation/Dockerfile',
+    context="..",
     entrypoint="./server",
     live_update=[
         sync("../services/candidate-generation/server", "/app/server"),
