@@ -17,7 +17,7 @@ ingressAnnotations:
   alb.ingress.kubernetes.io/target-type: ip
   alb.ingress.kubernetes.io/type: external
 imageRepository: 963957630095.dkr.ecr.us-west-2.amazonaws.com/recsys/orchestrator
-imageTag: 9ce13c598b06f23b04b5e57232f80d61cc6e738f
+imageTag: 8bb33b9d652d030ab48fa468d3e648e3a1db697a
 resources:
   requests:
     memory: 256Mi
