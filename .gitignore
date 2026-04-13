@@ -9,3 +9,5 @@
 *kubeconfig.yaml
 *.tfvars
 *.tgz
+*.ruff_cache
+*.pb*

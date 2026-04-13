@@ -1,14 +1,41 @@
+
 # Stage 1: Build
-FROM maven:3.9-eclipse-temurin-21 AS build
+FROM maven:3.9-eclipse-temurin-21 AS base
+
 WORKDIR /app
-COPY pom.xml .
+
+COPY services/orchestrator/pom.xml .
+
 RUN mvn dependency:go-offline 
-COPY src ./src
+
+FROM base AS style-check
+
+COPY services/orchestrator/src ./src
+
+RUN mvn spotless:check && mvn checkstyle:checkstyle
+
+FROM base AS build 
+
+COPY api/proto ./api/proto
+
+COPY services/orchestrator/src ./src
+
 RUN mvn package -DskipTests
 
-# Stage 2: Run
+RUN mkdir extracted && \
+    java -Djarmode=tools -jar target/*.jar extract --layers --launcher --destination extracted
+
 FROM eclipse-temurin:21-jre-alpine 
+
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-CMD [ "java", "-jar", "app.jar" ]
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
+
+COPY --from=style-check /etc/passwd /dev/null   
+
+COPY --from=build /app/extracted/dependencies/ ./
+COPY --from=build /app/extracted/spring-boot-loader/ ./
+COPY --from=build /app/extracted/snapshot-dependencies/ ./
+COPY --from=build /app/extracted/application/ ./
+
+CMD ["java", "-jar", "app.jar"]
+
+ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
